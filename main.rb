@@ -4,6 +4,10 @@ require "twitter"
 require 'yaml'
 require "csv"
 
+def tweet_id2time(id) #tweetIDから時刻を算出する
+  Time.at(((id.to_i >> 22) + 1288834974657) / 1000.0) 
+end
+
 
 def mentionTimeline
   just_time = Time.now
