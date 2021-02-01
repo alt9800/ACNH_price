@@ -10,7 +10,7 @@ end
 
 
 def mentionTimeline
-  p just_time = Time.now
+  p just_time = Time.now #shellのログに残るように標準出力に渡すようにしている。
   search_span = 60.0
   @client.mentions_timeline.each do |tweet|
     if tweet.is_a?(Twitter::Tweet)
@@ -18,7 +18,7 @@ def mentionTimeline
       CSV.foreach("./list.csv") do |row|
         if row[1] == word then
           if tweet_id2time(tweet.id) >= just_time -  search_span then
-            p tweet
+            p tweet #shellのログに残るように標準出力に渡すようにしている。
             comment = "#{row[1]}の出現時期は#{row[2]}、#{row[3]}で#{row[4]}にみられます。\n#{row[5]}ベルで売れます。"
             @client.update("@#{tweet.user.screen_name}\n#{comment}", options = {:in_reply_to_status_id => tweet.id})
           end
