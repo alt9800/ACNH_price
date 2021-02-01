@@ -6,14 +6,16 @@ require "csv"
 
 
 def mentionTimeline
+  just_time = Time.now
+  search_span = 60.0
   @client.mentions_timeline.each do |tweet|
     if tweet.is_a?(Twitter::Tweet)
       word = tweet.text.split(" ")[1]
       CSV.foreach("./list.csv") do |row|
-	if row[1] == word
-	  comment = "#{row[1]}の出現時期は#{row[2]}、#{row[3]}で#{row[4]}にみられます。\n#{row[5]}ベルで売れます。"
-	  @client.update("@#{tweet.user.screen_name}\n#{comment}", options = {:in_reply_to_status_id => tweet.id})
-	end 
+        if row[1] == word && tweet_id2time(tweet.id) >= just_time -  search_span
+          comment = "#{row[1]}の出現時期は#{row[2]}、#{row[3]}で#{row[4]}にみられます。\n#{row[5]}ベルで売れます。"
+          @client.update("@#{tweet.user.screen_name}\n#{comment}", options = {:in_reply_to_status_id => tweet.id})
+        end 
       end
     end
   end
